@@ -1,18 +1,14 @@
 (ns user
   "Development namespace with REPL utilities"
-  (:require [com.stuartsierra.component :as component]
-            [com.stuartsierra.component.repl :refer [reset set-init start stop system]]
-            [clojure.tools.namespace.repl :refer [refresh]]
-            [clojure-pedestal-playground.components.example-component :as example]))
-
-(defn dev-system
-  "Constructs a system map for development."
-  []
-  (component/system-map
-   :example (example/new-example-component {:server {:port 8080}})))
+  #_{:clj-kondo/ignore [:unused-referred-var]}
+  (:require
+   ;; Need to define this function wo we can execute from repl
+   [com.stuartsierra.component.repl :refer [reset set-init start stop system]]
+   [clojure-pedestal-playground.core :as core]
+   [clojure-pedestal-playground.config :as config]))
 
 ;; Tell component.repl how to create your system
-(set-init (fn [_] (dev-system)))
+(set-init (fn [_] (core/app-system (config/read-config))))
 
 (println "\n===========================================")
 (println "Dev utilities loaded. Available commands:")
