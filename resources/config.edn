@@ -1,0 +1,13 @@
+{:server {:port #long #or [#env APP_PORT 8080]}}
+;; Reader tags (the # symbols):
+
+;; 1. #long - Converts the result to a long integer type
+;; 2. #or [...] - Tries each option in the vector from left to right, using the first one that succeeds
+;; 3. #env APP_PORT - Reads the value from the APP_PORT environment variable
+
+;; What it does:
+
+;; The port configuration will:
+;; 1. First try to read the APP_PORT environment variable
+;; 2. If APP_PORT is not set or empty, fall back to 8080
+;; 3. Convert the final value to a long integer
