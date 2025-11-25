@@ -1,18 +1,61 @@
 (ns clojure-pedestal-playground.components.pedestal-component
-  (:require [com.stuartsierra.component :as component]
-            [io.pedestal.connector :as conn]
-            [io.pedestal.http.http-kit :as hk]))
+  (:require
+   [com.stuartsierra.component :as component]
+   [io.pedestal.connector :as conn]
+   [io.pedestal.http.http-kit :as hk]
+   [io.pedestal.http.route :as route]
+   [io.pedestal.interceptor :as interceptor]))
+
+
+(defn response [status body & {:as headers}]
+  {:status status :body body :headers headers})
+
+(def ok (partial response 200))
+(def created (partial response 201))
+(def accepted (partial response 202))
 
 (defn greet-handler [_request]
   {:status 200
    :body   "Hello, world!\n"})
 
+(defn inject-dependencies
+  [dependencies]
+  (interceptor/interceptor
+   {:name ::inject-dependencies
+    :enter (fn [context]
+             (assoc context :dependencies dependencies))}))
+
+(defn get-todo-by-id
+  [{:keys [in-memory-state-component]} todo-id]
+  (->> @(:state-atom in-memory-state-component)
+       (filter (fn [todo] (= todo-id (:id todo))))
+       (first)))
+
+(def get-todo-handler
+  {:name :get-todo-handler
+   :enter
+   (fn [{:keys [dependencies]} context]
+     (println "get-todo-handler" (:keys context))
+     (let [request (:request context)
+           response (ok
+                     get-todo-by-id dependencies
+                     (-> request
+                         :path-params
+                         :todo-id
+                         (parse-uuid)))]
+       (assoc context :response response)))})
+
 (def routes
-  #{["/greet" :get greet-handler :route-name :greet]})
+  #{["/api/greet" :get greet-handler :route-name :greet]
+    ["/todo/:todo-id" :get get-todo-handler :route-name :get-todo]})
+
+(def url-for (route/url-for-routes routes))
 
 ;; To show how other component depends
 (defrecord PedestalComponent
-           [config example-component]
+           [config
+            example-component
+            in-memory-state-component]
   component/Lifecycle
 
   (start [component]
@@ -20,6 +63,7 @@
     (let [server (-> (conn/default-connector-map (-> config :server :port))
                      (conn/with-default-interceptors)
                      (conn/with-routes routes)
+                     (update ::conn/interceptors into [(inject-dependencies component)])
                      (hk/create-connector nil)
                      (conn/start!))]
       ;; the run-time state assoc'd in.

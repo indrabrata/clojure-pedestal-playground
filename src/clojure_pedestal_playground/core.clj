@@ -1,18 +1,24 @@
+;; credit : https://www.youtube.com/@andrey.fadeev
+
 (ns clojure-pedestal-playground.core
   (:gen-class)
-  (:require [clojure-pedestal-playground.config :as config]
-            [com.stuartsierra.component :as component]
-            [clojure-pedestal-playground.components.example-component :as example-component]
-            [clojure-pedestal-playground.components.pedestal-component :as pedestal-component]))
+  (:require
+   [clojure-pedestal-playground.components.example-component :as example-component]
+   [clojure-pedestal-playground.components.in-memory-state-component :as in-memory-state-component]
+   [clojure-pedestal-playground.components.pedestal-component :as pedestal-component]
+   [clojure-pedestal-playground.config :as config]
+   [com.stuartsierra.component :as component]))
 
 (defn app-system
   [config]
   (component/system-map
    :example-component (example-component/new-example-component config)
+   :in-memory-state-component (in-memory-state-component/new-in-memory-state-component config)
    :pedestal-component
    (component/using
     (pedestal-component/new-pedestal-component config)
-    [:example-component])))
+    [:example-component
+     :in-memory-state-component])))
 
 (defn -main
   "I don't do a whole lot ... yet."
