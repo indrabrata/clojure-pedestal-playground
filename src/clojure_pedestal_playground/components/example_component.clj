@@ -17,6 +17,5 @@
     (println ";; Stopping ExampleComponent")
     (assoc component :state nil)))
 
-
 (defn new-example-component [config]
   (map->ExampleComponent {:config config}))

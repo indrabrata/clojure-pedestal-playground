@@ -20,10 +20,9 @@
 ;; Notice the single quote ' before the namespace name. Without the quote, Clojure tries to evaluate clojure-pedestal-playground.config as a variable or class, which
 ;;  causes the ClassNotFoundException.
 
-
 ;; If the function want to evaluate not exists
 ;; (in-ns 'clojure-pedestal-playground.config)
 ;; (clojure.core/require 'clojure-pedestal-playground.config :reload)
 ;; (read-config)
-;; ORRRRRR
+;; OR
 ;; ctrl + alt + c (evaluate using calva)

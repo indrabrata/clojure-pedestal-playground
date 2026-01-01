@@ -22,5 +22,4 @@
          :exec-fn cognitect.test-runner.api/test}
   :dev {:main-opts ["-e" "(require, 'dev)" "-e" "(in-ns,'dev)"]}}}
 
-
 ;; However: If you choose an alias at Jack-in that specifies :main-opts, it will make the Clojure CLI to add main opts and Calva will then not override these by adding -m ... to the command line. This means that an alias that specify :main-opts must result in an nREPL server being started, or else Calva won't have a server to connect to. Calva won't further analyze this, but will just warn you at Jack-in.

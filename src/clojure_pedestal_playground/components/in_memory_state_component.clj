@@ -18,6 +18,5 @@
     (println ";; Stopping InMemoryStateComponent")
     (assoc component :state-atom nil)))
 
-
 (defn new-in-memory-state-component [config]
   (map->InMemoryStateComponent {:config config}))

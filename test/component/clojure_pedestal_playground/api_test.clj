@@ -43,7 +43,6 @@
                (client/get)
                (select-keys [:body :status]))))))
 
-
 (deftest get-todo-test
   #_{:clj-kondo/ignore [:unresolved-symbol]}
   (let [random-id (random-uuid)
@@ -60,5 +59,3 @@
            (-> (sut->url sut (url-for :get-todo {:path-params {:todo-id random-id}}))
                (client/get)
                (select-keys [:body :status]))))))
-
-  

@@ -2,7 +2,7 @@
   "Development namespace with REPL utilities"
   #_{:clj-kondo/ignore [:unused-referred-var]}
   (:require
-   ;; Need to define this function wo we can execute from repl
+   ;; Need to define this function so we can execute from repl
    [com.stuartsierra.component.repl :refer [reset set-init start stop system]]
    [clojure-pedestal-playground.core :as core]
    [clojure-pedestal-playground.config :as config]))

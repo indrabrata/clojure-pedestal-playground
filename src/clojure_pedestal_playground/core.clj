@@ -23,6 +23,7 @@
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
+  ;; this is the macro to give the argument into the function
   (let [system (-> config/read-config
                    (app-system)
                    (component/start-system))]
@@ -30,7 +31,6 @@
     (.addShutdownHook
      (Runtime/getRuntime)
      (new Thread #(component/stop-system system)))))
-
 
 ;; Note :
 

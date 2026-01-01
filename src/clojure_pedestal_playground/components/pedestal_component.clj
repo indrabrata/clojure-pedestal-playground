@@ -11,8 +11,6 @@
   {:status status :body body :headers headers})
 
 (def ok (partial response 200))
-(def created (partial response 201))
-(def accepted (partial response 202))
 
 (defn greet-handler [_request]
   {:status 200
@@ -46,8 +44,8 @@
        (assoc context :response response)))})
 
 (def routes
-  #{["/api/greet" :get greet-handler :route-name :greet]
-    ["/todo/:todo-id" :get get-todo-handler :route-name :get-todo]})
+  [["/api/greet" :get greet-handler :route-name :greet]
+   ["/todo/:todo-id" :get get-todo-handler :route-name :get-todo]])
 
 (def url-for (route/url-for-routes routes))
 
